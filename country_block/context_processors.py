@@ -22,7 +22,7 @@ def addgeoip(request):
         if user_country:
             user_country = user_country.upper()
 
-        if getattr(settings, 'COUNTRY_DEBUG', False):
+        if getattr(settings, 'COUNTRY_BLOCK_DEBUG', False):
             user_country = allowed_countries[0]
 
         return {'country': user_country,

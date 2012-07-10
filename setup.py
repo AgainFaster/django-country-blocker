@@ -14,7 +14,7 @@ CLASSIFIERS = [
 
 setup(
     name='django-country-blocker',
-    version='0.1',
+    version='0.1.1',
     packages=['country_block'],
     url='http://www.github.com/jslootbeek/django-country-blocker',
     license='BSD License',

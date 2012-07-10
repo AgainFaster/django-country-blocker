@@ -1,0 +1,2 @@
+v0.0.1
+changed "import settings" to "from django.conf import settings" to support normal installs, rather than my hacked test servers

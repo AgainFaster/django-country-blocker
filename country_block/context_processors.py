@@ -1,4 +1,4 @@
-import settings
+from django.conf import settings
 from django.contrib.gis.utils.geoip import GeoIP
 
 def addgeoip(request):

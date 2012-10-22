@@ -1,2 +1,5 @@
+v0.1.2
+any user who is "staff" overwrites this and will always get {{ in_country }} == True
+
 v0.0.1
 changed "import settings" to "from django.conf import settings" to support normal installs, rather than my hacked test servers

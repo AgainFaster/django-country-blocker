@@ -14,15 +14,13 @@ CLASSIFIERS = [
 
 setup(
     name='django-country-blocker',
-    version='0.1.1',
+    version='0.1.2',
     packages=['country_block'],
     url='http://www.github.com/jslootbeek/django-country-blocker',
     license='BSD License',
     author='Jule Slootbeek',
     author_email='jslootbeek@gmail.com',
-    install_requires=[
-        'Django>=1.3.4',
-    ],
+    requires=['Django (>=1.3)'],
     description='Django app introducing a Context Processor that adds users location information to the context.',
     long_description=open(os.path.join(os.path.dirname(__file__), 'README.md')).read(),
     classifiers=CLASSIFIERS,

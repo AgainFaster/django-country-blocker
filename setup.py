@@ -21,7 +21,7 @@ setup(
     author='Jule Slootbeek',
     author_email='jslootbeek@gmail.com',
     install_requires=[
-        'Django>=1.3',
+        'Django>=1.3.4',
     ],
     description='Django app introducing a Context Processor that adds users location information to the context.',
     long_description=open(os.path.join(os.path.dirname(__file__), 'README.md')).read(),

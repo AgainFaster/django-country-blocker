@@ -24,7 +24,7 @@ def addgeoip(request):
     allowed_countries = getattr(settings, 'COUNTRY_BLOCK_ALLOWED_COUNTRIES', server_location)
 
     #if the visiting user has staff status, let them see everything
-    if request.user.is_staff:
+    if hasattr(request, 'user') and request.user.is_staff:
         return {'country' : 'Staff Overwrite',
                 'in_country' : True}
 

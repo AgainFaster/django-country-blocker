@@ -14,9 +14,11 @@ def addgeoip(request):
     adds users country and a boolean indicating whether or not the user is in a list of
     allowed countries
     """
-    ip = request.META.get('REMOTE_ADDR', False)
-    if not ip and request.META.has_key('HTTP_X_FORWARDED_FOR'):
+    if request.META.has_key('HTTP_X_FORWARDED_FOR'):
         ip = request.META['HTTP_X_FORWARDED_FOR'].split(",")[0]
+    else:
+        ip = request.META.get('REMOTE_ADDR', False)
+
 
     #what country should the server be set to
     server_location  = getattr(settings, 'LOCATION', None)

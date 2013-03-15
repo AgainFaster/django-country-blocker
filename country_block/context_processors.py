@@ -149,9 +149,4 @@ def addgeoip(request):
     else:
         ret_dict = {'country': "NOIP",
                     'in_country': False}
-        data = {} #client.get_data_from_request(request)
-        data.update({
-            'level': logging.ERROR,
-        })
-        client.capture('Message', message='User with no IP detected', data=data)
         return ret_dict

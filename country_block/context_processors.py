@@ -104,14 +104,14 @@ def addgeoip(request):
         logger.info("(Debug) Returning: %s" % ret_dict)
         return ret_dict
 
-    if request.session and "country" in request.session:
+    if hasattr(request, "session") and "country" in request.session:
         ret_dict = {'country': request.session['country'],
                     'in_country': bool(request.session['country'] in allowed_countries)}
         logger.info("(Cookie) Returning: %s" % ret_dict)
         return ret_dict
 
     #if the visiting user has staff status, let them see everything
-    if 'user' in request and request.user.is_staff:
+    if hasattr(request, "user") and request.user.is_staff:
         ret_dict = {'country': 'Staff Overwrite',
                     'in_country': True}
         logging.debug("(Staff Overwrite) Returning %s" % ret_dict)
@@ -142,14 +142,14 @@ def addgeoip(request):
 
         ret_dict = {'country': user_country,
                     'in_country': bool(user_country in allowed_countries)}
-        if request.session:
+        if hasattr(request, "session"):
             request.session['country'] = user_country
         logger.info("(Fetched) Returning: %s" % ret_dict)
         return ret_dict
     else:
         ret_dict = {'country': "NOIP",
                     'in_country': False}
-        data = client.get_data_from_request(request)
+        data = {} #client.get_data_from_request(request)
         data.update({
             'level': logging.ERROR,
         })

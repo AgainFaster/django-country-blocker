@@ -104,7 +104,7 @@ def addgeoip(request):
         logger.info("(Debug) Returning: %s" % ret_dict)
         return ret_dict
 
-    if "country" in request.session:
+    if request.session and "country" in request.session:
         ret_dict = {'country': request.session['country'],
                     'in_country': bool(request.session['country'] in allowed_countries)}
         logger.info("(Cookie) Returning: %s" % ret_dict)
@@ -142,7 +142,8 @@ def addgeoip(request):
 
         ret_dict = {'country': user_country,
                     'in_country': bool(user_country in allowed_countries)}
-        request.session['country'] = user_country
+        if request.session:
+            request.session['country'] = user_country
         logger.info("(Fetched) Returning: %s" % ret_dict)
         return ret_dict
     else:

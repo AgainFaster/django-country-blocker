@@ -104,17 +104,17 @@ def addgeoip(request):
         logger.info("(Debug) Returning: %s" % ret_dict)
         return ret_dict
 
-    if hasattr(request, "session") and "country" in request.session:
-        ret_dict = {'country': request.session['country'],
-                    'in_country': bool(request.session['country'] in allowed_countries)}
-        logger.info("(Cookie) Returning: %s" % ret_dict)
-        return ret_dict
-
     #if the visiting user has staff status, let them see everything
     if hasattr(request, "user") and request.user.is_staff:
         ret_dict = {'country': 'Staff Overwrite',
                     'in_country': True}
         logging.debug("(Staff Overwrite) Returning %s" % ret_dict)
+        return ret_dict
+
+    if hasattr(request, "session") and "country" in request.session:
+        ret_dict = {'country': request.session['country'],
+                    'in_country': bool(request.session['country'] in allowed_countries)}
+        logger.info("(Cookie) Returning: %s" % ret_dict)
         return ret_dict
 
     if 'HTTP_X_FORWARDED_FOR' in request.META:

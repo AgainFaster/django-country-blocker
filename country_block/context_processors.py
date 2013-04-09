@@ -55,7 +55,10 @@ def get_info(request, ip):
             'level': logging.ERROR,
             })
         client.capture('Error',
-                       message='Maxmind request failed with status: %s' % response.status_code, data=data)
+                       message='Maxmind request failed with status: %s' % response.status_code,
+                       data=data,
+                       extra={'ip': ip,
+                              'response': response})
         return False
     reader = csv.reader([response.content])
 
@@ -67,7 +70,11 @@ def get_info(request, ip):
             'level': logging.ERROR,
             })
         client.capture('Error',
-                       message='Maxmind returned an error code for the request: %s' % omni['error'], data=data)
+                       message='Maxmind returned an error code for the request: %s' % omni['error'],
+                       data=data,
+                       extra={'ip': ip,
+                              'response': response,
+                              'omni': omni})
         return False
     else:
         logger.info("MaxMind Omni data for %s\n\n" % ip)

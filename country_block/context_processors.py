@@ -1,6 +1,7 @@
 import csv
 from django.core.exceptions import ImproperlyConfigured
 from raven.contrib.django.models import client
+import re
 import requests
 from django.conf import settings
 
@@ -14,7 +15,43 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-def get_info(request, ip):
+def get_info_from_freegeoip(request, ip):
+    response = requests.get(url="http://freegeoip.net/json/%s" % ip)
+
+    if response.status_code != requests.codes.ok:
+        logger.error("FreeGeoIP request failed with status %s\n" % response.status_code)
+        data = client.get_data_from_request(request)
+        data.update({
+            'level': logging.ERROR,
+            'ip': ip,
+            'response': response,
+            })
+        client.capture('Exception',
+                       message='FreeGeoIP request failed with status: %s' % response.status_code,
+                       data=data,)
+        return False
+
+    dict = response.json()
+    if not dict:
+        logger.error("FreeGeoIP JSON dictionary is empty.")
+        data = client.get_data_from_request(request)
+        data.update({
+            'level': logging.ERROR,
+            'ip': ip,
+            'response': response,
+            })
+        client.capture('Exception',
+                       message='FreeGeoIP request failed with status: %s' % response.status_code,
+                       data=data,)
+        return False
+
+    logger.info("FreeGeoIP JSON data for %s\n\n" % ip)
+    for (key, val) in dict.items():
+        logger.info("  %-20s  %s" % (key, val))
+    logger.info("\n")
+    return dict.get("country_code")
+
+def get_info_from_maxmind(request, ip):
 
     fields = ['country_code',
               # 'country_name',
@@ -49,16 +86,16 @@ def get_info(request, ip):
     response = requests.get('https://geoip.maxmind.com/a', params=payload)
 
     if response.status_code != requests.codes.ok:
-        logger.error("Request failed with status %s\n" % response.status_code)
+        logger.error("Maxmind request failed with status %s\n" % response.status_code)
         data = client.get_data_from_request(request)
         data.update({
             'level': logging.ERROR,
+            'ip': ip,
+            'response': response,
             })
-        client.capture('Error',
+        client.capture('Exception',
                        message='Maxmind request failed with status: %s' % response.status_code,
-                       data=data,
-                       extra={'ip': ip,
-                              'response': response})
+                       data=data,)
         return False
     reader = csv.reader([response.content])
 
@@ -68,20 +105,20 @@ def get_info(request, ip):
         data = client.get_data_from_request(request)
         data.update({
             'level': logging.ERROR,
+            'ip': ip,
+            'response': response,
+            'omni': omni,
             })
-        client.capture('Error',
+        client.capture('Exception',
                        message='Maxmind returned an error code for the request: %s' % omni['error'],
-                       data=data,
-                       extra={'ip': ip,
-                              'response': response,
-                              'omni': omni})
+                       data=data,)
         return False
-    else:
-        logger.info("MaxMind Omni data for %s\n\n" % ip)
-        for (key, val) in omni.items():
-            logger.info("  %-20s  %s" % (key, val))
-        logger.info("\n")
-        return omni.get("country_code")
+
+    logger.info("MaxMind Omni data for %s\n\n" % ip)
+    for (key, val) in omni.items():
+        logger.info("  %-20s  %s" % (key, val))
+    logger.info("\n")
+    return omni.get("country_code")
 
 def addgeoip(request):
     """
@@ -138,10 +175,27 @@ def addgeoip(request):
             logger.info("(Local) Returning: %s" % ret_dict)
             return ret_dict
 
-        if getattr(settings, "MAXMIND_USE_LOCAL_DB", False):
-            user_country = GeoIP().country_code(ip)
-        else:
-            user_country = get_info(request, ip)
+        if re.match("^192.168.\d{1,3}\.\d{1,3}$", ip):
+            ret_dict = {'country': "LOCAL_RESERVED_IP",
+                        'in_country': True}
+            logger.info("(Local Reserved) Returning: %s" % ret_dict)
+            return ret_dict
+
+        # Possible choices: FREEGEOIP, MAXMIND... default is just MAXMIND
+        SERVICES = getattr(settings, "COUNTRY_BLOCK_SERVICES", ("MAXMIND",))
+        user_country = None
+
+        # Always try FREEGEOIP first if configured
+        if 'FREEGEOIP' in SERVICES:
+            user_country = get_info_from_freegeoip(request, ip)
+
+        # If MAXMIND is configured and FREEGEOIP is not configured or failed, try MAXMIND
+        if not user_country and 'MAXMIND' in SERVICES:
+            if getattr(settings, "MAXMIND_USE_LOCAL_DB", False):
+                user_country = GeoIP().country_code(ip)
+            else:
+                user_country = get_info_from_maxmind(request, ip)
+
         logger.info("User %s is in %s" % (ip, user_country))
 
         if user_country:

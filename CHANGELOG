@@ -1,3 +1,13 @@
+v1.1.1
+If any exception comes back from the request to freegeoip.net, it will be logged.
+django-country-blocker will then fallback on maxmind (if configured).
+
+v1.1.0
+Added support for the freegeoip.net service.
+
+v1.0
+Added support for the maxmind service.
+
 v0.1.2
 any user who is "staff" overwrites this and will always get {{ in_country }} == True
 

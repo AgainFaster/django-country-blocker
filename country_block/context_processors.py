@@ -4,6 +4,7 @@ from raven.contrib.django.models import client
 import re
 import requests
 from django.conf import settings
+import sys
 
 try:
     from django.contrib.gis.geoip import GeoIP
@@ -16,7 +17,17 @@ logger = logging.getLogger(__name__)
 
 
 def get_info_from_freegeoip(request, ip):
-    response = requests.get(url="http://freegeoip.net/json/%s" % ip)
+
+    try:
+        response = requests.get(url="http://freegeoip.net/json/%s" % ip)
+    except: # catch *all* exceptions
+        e = sys.exc_info()[0]
+        logger.error("FreeGeoIP request exception: %s\n" % e)
+        client.capture('Exception',
+                       message='FreeGeoIP request exception: %s' % e,
+                       data={'url' : "http://freegeoip.net/json/%s" % ip,})
+
+        return False
 
     if response.status_code != requests.codes.ok:
         logger.error("FreeGeoIP request failed with status %s\n" % response.status_code)
@@ -28,7 +39,7 @@ def get_info_from_freegeoip(request, ip):
             })
         client.capture('Exception',
                        message='FreeGeoIP request failed with status: %s' % response.status_code,
-                       data=data,)
+                       data=data)
         return False
 
     dict = response.json()
@@ -42,7 +53,7 @@ def get_info_from_freegeoip(request, ip):
             })
         client.capture('Exception',
                        message='FreeGeoIP request failed with status: %s' % response.status_code,
-                       data=data,)
+                       data=data)
         return False
 
     logger.info("FreeGeoIP JSON data for %s\n\n" % ip)
@@ -95,7 +106,7 @@ def get_info_from_maxmind(request, ip):
             })
         client.capture('Exception',
                        message='Maxmind request failed with status: %s' % response.status_code,
-                       data=data,)
+                       data=data)
         return False
     reader = csv.reader([response.content])
 
@@ -111,7 +122,7 @@ def get_info_from_maxmind(request, ip):
             })
         client.capture('Exception',
                        message='Maxmind returned an error code for the request: %s' % omni['error'],
-                       data=data,)
+                       data=data)
         return False
 
     logger.info("MaxMind Omni data for %s\n\n" % ip)

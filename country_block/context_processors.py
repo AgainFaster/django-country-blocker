@@ -16,44 +16,54 @@ import logging
 logger = logging.getLogger(__name__)
 
 
+def log_error(request, message, extra=None):
+    logger.info("(Error) %s\n" % message)
+    data = client.get_data_from_request(request)
+    data.update({
+        'level': logging.ERROR,
+        })
+
+    client.capture('Message',
+                   message=message,
+                   data=data,
+                   extra=extra)
+
 def get_info_from_freegeoip(request, ip):
 
+    url = "http://freegeoip.net/json/%s" % ip
+
     try:
-        response = requests.get(url="http://freegeoip.net/json/%s" % ip)
+        response = requests.get(url=url)
     except: # catch *all* exceptions
         e = sys.exc_info()[0]
-        logger.error("FreeGeoIP request exception: %s\n" % e)
-        client.capture('Exception',
-                       message='FreeGeoIP request exception: %s' % e,
-                       data={'url' : "http://freegeoip.net/json/%s" % ip,})
+        message = "FreeGeoIP request exception: %s" % e
+        extra = {'url': url,
+                 'ip': ip,}
 
+        log_error(request, message=message, extra=extra)
         return False
 
     if response.status_code != requests.codes.ok:
-        logger.error("FreeGeoIP request failed with status %s\n" % response.status_code)
-        data = client.get_data_from_request(request)
-        data.update({
-            'level': logging.ERROR,
+        message='FreeGeoIP request failed with status: %s' % response.status_code
+        extra = {
+            'url': url,
             'ip': ip,
-            'response': response,
-            })
-        client.capture('Exception',
-                       message='FreeGeoIP request failed with status: %s' % response.status_code,
-                       data=data)
+            'response': response.text,
+            }
+
+        log_error(request, message=message, extra=extra)
         return False
 
     dict = response.json()
     if not dict:
-        logger.error("FreeGeoIP JSON dictionary is empty.")
-        data = client.get_data_from_request(request)
-        data.update({
-            'level': logging.ERROR,
+        message = "FreeGeoIP JSON dictionary is empty."
+        extra = {
+            'url': url,
             'ip': ip,
-            'response': response,
-            })
-        client.capture('Exception',
-                       message='FreeGeoIP request failed with status: %s' % response.status_code,
-                       data=data)
+            'response': response.text,
+            }
+
+        log_error(request, message=message, extra=extra)
         return False
 
     logger.info("FreeGeoIP JSON data for %s\n\n" % ip)
@@ -94,35 +104,45 @@ def get_info_from_maxmind(request, ip):
         raise ImproperlyConfigured
 
     payload = {'l': LICENSE_KEY, 'i': ip}
-    response = requests.get('https://geoip.maxmind.com/a', params=payload)
+    url = 'https://geoip.maxmind.com/a'
+
+    try:
+        response = requests.get(url, params=payload)
+    except: # catch *all* exceptions
+        e = sys.exc_info()[0]
+        message = "Maxmind request exception: %s" % e
+        extra = {'url': url,
+                 'payload': payload,
+                 'ip': ip,}
+
+        log_error(request, message=message, extra=extra)
+        return False
 
     if response.status_code != requests.codes.ok:
-        logger.error("Maxmind request failed with status %s\n" % response.status_code)
-        data = client.get_data_from_request(request)
-        data.update({
-            'level': logging.ERROR,
+        message = "Maxmind request failed with status %s" % response.status_code
+        extra = {
+            'url': url,
+            'payload': payload,
             'ip': ip,
-            'response': response,
-            })
-        client.capture('Exception',
-                       message='Maxmind request failed with status: %s' % response.status_code,
-                       data=data)
+            'response': response.text,
+            }
+
+        log_error(request, message=message, extra=extra)
         return False
     reader = csv.reader([response.content])
 
     omni = dict(zip(fields, [unicode(s, 'latin_1') for s in reader.next()]))
     if "error" in omni:
-        logger.error("MaxMind returned an error code for the request: %s\n" % omni['error'])
-        data = client.get_data_from_request(request)
-        data.update({
-            'level': logging.ERROR,
+        message = "MaxMind returned an error code for the request: %s" % omni['error']
+        extra ={
+            'url': url,
+            'payload': payload,
             'ip': ip,
-            'response': response,
+            'response': response.text,
             'omni': omni,
-            })
-        client.capture('Exception',
-                       message='Maxmind returned an error code for the request: %s' % omni['error'],
-                       data=data)
+            }
+
+        log_error(request, message=message, extra=extra)
         return False
 
     logger.info("MaxMind Omni data for %s\n\n" % ip)
@@ -168,7 +188,8 @@ def addgeoip(request):
 
     if hasattr(request, "session") and "country" in request.session:
         ret_dict = {'country': request.session['country'],
-                    'in_country': bool(request.session['country'] in allowed_countries)}
+                    'in_country': bool(request.session['country'] in allowed_countries)
+                                    or request.session['country'] == 'RD'}
         logger.info("(Cookie) Returning: %s" % ret_dict)
         return ret_dict
 
@@ -211,9 +232,14 @@ def addgeoip(request):
 
         if user_country:
             user_country = user_country.upper()
+        else:
+            # an error should already be logged at this point
+            user_country = "NO_COUNTRY_FOUND"
 
         ret_dict = {'country': user_country,
-                    'in_country': bool(user_country in allowed_countries)}
+                    'in_country': bool(user_country in allowed_countries)
+                                    or user_country == 'RD'}
+
         if hasattr(request, "session"):
             request.session['country'] = user_country
         logger.info("(Fetched) Returning: %s" % ret_dict)

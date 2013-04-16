@@ -1,3 +1,7 @@
+v1.1.2
+Correctly write error messages to Sentry. Reserved ip's (e.g. 192.xxx.xxx.xxx) will set in_country = True.
+No country found will set in_country = False.
+
 v1.1.1
 If any exception comes back from the request to freegeoip.net, it will be logged.
 django-country-blocker will then fallback on maxmind (if configured).

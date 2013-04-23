@@ -12,10 +12,13 @@ Settings options
 COUNTRY_BLOCK_ALLOWED_COUNTRIES : list of country codes that will trigger in_country == True if it contains
 the user's country code
 
-COUNTRY_BLOCK_DEBUG : sets the user_country equal to an allowed country,
-letting you test as if you are in the allowed country. False by default.
+COUNTRY_BLOCK_DEBUG_COUNTRY : sets the user_country equal to this value for all users, letting you test as if you are in
+this country. False by default.
 
-COUNTRY_BLOCK_DEBUG_OUT_OF_COUNTRY : sets the user_country to a non-allowed country,
+COUNTRY_BLOCK_DEBUG : sets the user_country equal to the first allowed country in the list,
+letting you test as if you are in the first allowed country. False by default.
+
+COUNTRY_BLOCK_DEBUG_OUT_OF_COUNTRY : sets the user_country to a non-allowed (non-existent) country,
 letting you test as if you are in the non-allowed country. False by default.
 
 COUNTRY_BLOCK_SERVICES : list of services which can contain "MAXMIND" and/or "FREEGEOIP". If both "MAXMIND" and

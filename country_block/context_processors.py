@@ -14,7 +14,7 @@ except:
 import logging
 
 logger = logging.getLogger(__name__)
-
+NO_COUNTRY = '00'
 
 def log_error(request, message, extra=None):
     logger.info("(Error) %s\n" % message)
@@ -151,6 +151,27 @@ def get_info_from_maxmind(request, ip):
     logger.info("\n")
     return omni.get("country_code")
 
+def create_dictionary(request, user_country, allowed_countries, message=None):
+    if user_country:
+        user_country = user_country.upper()
+    else:
+        # an error should already be logged at this point
+        user_country = NO_COUNTRY
+
+    ret_dict = {'country': user_country,
+                'in_country': bool(user_country in allowed_countries)
+                or user_country == 'RD'}
+
+    if message:
+        logger.info("(%s) Returning: %s" % (message, ret_dict))
+    else:
+        logger.info("Returning: %s" % ret_dict)
+
+    if user_country != NO_COUNTRY and hasattr(request, "session"):
+        request.session['country'] = user_country
+
+    return ret_dict
+
 def addgeoip(request):
     """
     Context Processor based on Adam Fasts blog post "Where is my user Part 1"
@@ -167,31 +188,21 @@ def addgeoip(request):
     if not server_location:
         raise ImproperlyConfigured
 
+    if hasattr(request, "session") and "country" in request.session:
+        return create_dictionary(request, request.session['country'], allowed_countries, 'IN_SESSION')
+
+    if getattr(settings, 'COUNTRY_BLOCK_DEBUG_COUNTRY', False):
+        return create_dictionary(request, settings.COUNTRY_BLOCK_DEBUG_COUNTRY, allowed_countries, 'COUNTRY_BLOCK_DEBUG_COUNTRY')
+
     if getattr(settings, 'COUNTRY_BLOCK_DEBUG_OUT_OF_COUNTRY', False):
-        ret_dict = {'country': "DEBUG FAKE OUT OF COUNTRY",
-                    'in_country': False}
-        logger.info("(Debug) Returning: %s" % ret_dict)
-        return ret_dict
+        return create_dictionary(request, NO_COUNTRY, allowed_countries, 'COUNTRY_BLOCK_DEBUG_OUT_OF_COUNTRY') # non existent country
 
     if getattr(settings, 'COUNTRY_BLOCK_DEBUG', False):
-        ret_dict = {'country': "DEBUG",
-                    'in_country': True}
-        logger.info("(Debug) Returning: %s" % ret_dict)
-        return ret_dict
+        return create_dictionary(request, allowed_countries[0], allowed_countries, 'COUNTRY_BLOCK_DEBUG')
 
     #if the visiting user has staff status, let them see everything
     if hasattr(request, "user") and request.user.is_staff:
-        ret_dict = {'country': 'Staff Overwrite',
-                    'in_country': True}
-        logging.debug("(Staff Overwrite) Returning %s" % ret_dict)
-        return ret_dict
-
-    if hasattr(request, "session") and "country" in request.session:
-        ret_dict = {'country': request.session['country'],
-                    'in_country': bool(request.session['country'] in allowed_countries)
-                                    or request.session['country'] == 'RD'}
-        logger.info("(Cookie) Returning: %s" % ret_dict)
-        return ret_dict
+        return create_dictionary(request, allowed_countries[0], allowed_countries, 'STAFF_USER')
 
     if 'HTTP_X_FORWARDED_FOR' in request.META:
         ip = request.META.get('HTTP_X_FORWARDED_FOR').split(",")[0]
@@ -201,20 +212,11 @@ def addgeoip(request):
     logger.debug("User with IP: %s" % ip)
 
     if ip:
-        if ip == "127.0.0.1":
-            ret_dict = {'country': "LOCAL",
-                        'in_country': True}
-            logger.info("(Local) Returning: %s" % ret_dict)
-            return ret_dict
-
-        if re.match("^192.168.\d{1,3}\.\d{1,3}$", ip):
-            ret_dict = {'country': "LOCAL_RESERVED_IP",
-                        'in_country': True}
-            logger.info("(Local Reserved) Returning: %s" % ret_dict)
-            return ret_dict
+        if ip == "127.0.0.1" or re.match("^192.168.\d{1,3}\.\d{1,3}$", ip):
+            return create_dictionary(request, allowed_countries[0], allowed_countries, 'LOCAL_IP')
 
         # Possible choices: FREEGEOIP, MAXMIND... default is just MAXMIND
-        SERVICES = getattr(settings, "COUNTRY_BLOCK_SERVICES", ("MAXMIND",))
+        SERVICES = getattr(request, settings, "COUNTRY_BLOCK_SERVICES", ("MAXMIND",))
         user_country = None
 
         # Always try FREEGEOIP first if configured
@@ -230,21 +232,6 @@ def addgeoip(request):
 
         logger.info("User %s is in %s" % (ip, user_country))
 
-        if user_country:
-            user_country = user_country.upper()
-        else:
-            # an error should already be logged at this point
-            user_country = "NO_COUNTRY_FOUND"
-
-        ret_dict = {'country': user_country,
-                    'in_country': bool(user_country in allowed_countries)
-                                    or user_country == 'RD'}
-
-        if hasattr(request, "session"):
-            request.session['country'] = user_country
-        logger.info("(Fetched) Returning: %s" % ret_dict)
-        return ret_dict
+        return create_dictionary(request, user_country, allowed_countries, 'FOUND_BY_SERVICE')
     else:
-        ret_dict = {'country': "NOIP",
-                    'in_country': False}
-        return ret_dict
+        return create_dictionary(request, NO_COUNTRY, allowed_countries, 'NO_IP')

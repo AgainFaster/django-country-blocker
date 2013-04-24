@@ -15,6 +15,9 @@ the user's country code
 COUNTRY_BLOCK_DEBUG_COUNTRY : sets the user_country equal to this value for all users, letting you test as if you are in
 this country. False by default.
 
+COUNTRY_BLOCK_DEBUG_REGION : sets the region_code equal to this value for all users, letting you test as if you are in
+this region. False by default.
+
 COUNTRY_BLOCK_DEBUG : sets the user_country equal to the first allowed country in the list,
 letting you test as if you are in the first allowed country. False by default.
 

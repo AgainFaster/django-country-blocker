@@ -41,7 +41,7 @@ def get_info_from_freegeoip(request, ip):
                  'ip': ip,}
 
         log_error(request, message=message, extra=extra)
-        return False
+        return False, False
 
     if response.status_code != requests.codes.ok:
         message='FreeGeoIP request failed with status: %s' % response.status_code
@@ -52,7 +52,7 @@ def get_info_from_freegeoip(request, ip):
             }
 
         log_error(request, message=message, extra=extra)
-        return False
+        return False, False
 
     dict = response.json()
     if not dict:
@@ -64,13 +64,13 @@ def get_info_from_freegeoip(request, ip):
             }
 
         log_error(request, message=message, extra=extra)
-        return False
+        return False, False
 
     logger.info("FreeGeoIP JSON data for %s\n\n" % ip)
     for (key, val) in dict.items():
         logger.info("  %-20s  %s" % (key, val))
     logger.info("\n")
-    return dict.get("country_code")
+    return dict.get("country_code"), dict.get("region_code")
 
 def get_info_from_maxmind(request, ip):
 
@@ -116,7 +116,7 @@ def get_info_from_maxmind(request, ip):
                  'ip': ip,}
 
         log_error(request, message=message, extra=extra)
-        return False
+        return False, False
 
     if response.status_code != requests.codes.ok:
         message = "Maxmind request failed with status %s" % response.status_code
@@ -128,7 +128,7 @@ def get_info_from_maxmind(request, ip):
             }
 
         log_error(request, message=message, extra=extra)
-        return False
+        return False, False
     reader = csv.reader([response.content])
 
     omni = dict(zip(fields, [unicode(s, 'latin_1') for s in reader.next()]))
@@ -143,24 +143,33 @@ def get_info_from_maxmind(request, ip):
             }
 
         log_error(request, message=message, extra=extra)
-        return False
+        return False, False
 
     logger.info("MaxMind Omni data for %s\n\n" % ip)
     for (key, val) in omni.items():
         logger.info("  %-20s  %s" % (key, val))
     logger.info("\n")
-    return omni.get("country_code")
+    return omni.get("country_code"), False
 
-def create_dictionary(request, user_country, allowed_countries, message=None):
+def create_dictionary(request, user_country, region_code, allowed_countries, message=None):
     if user_country:
         user_country = user_country.upper()
+        # special case for reserved IP, e.g. 192.168.1.1
+        if user_country == 'RD':
+            user_country = allowed_countries[0]
+            message = 'LOCAL_RESERVED_IP'
     else:
         # an error should already be logged at this point
         user_country = NO_COUNTRY
 
+    if region_code:
+        region_code = region_code.upper()
+    else:
+        region_code = None
+
     ret_dict = {'country': user_country,
-                'in_country': bool(user_country in allowed_countries)
-                or user_country == 'RD'}
+                'region': region_code,
+                'in_country': bool(user_country in allowed_countries)}
 
     if message:
         logger.info("(%s) Returning: %s" % (message, ret_dict))
@@ -169,6 +178,7 @@ def create_dictionary(request, user_country, allowed_countries, message=None):
 
     if user_country != NO_COUNTRY and hasattr(request, "session"):
         request.session['country'] = user_country
+        request.session['region'] = region_code
 
     return ret_dict
 
@@ -188,21 +198,26 @@ def addgeoip(request):
     if not server_location:
         raise ImproperlyConfigured
 
-    if hasattr(request, "session") and "country" in request.session:
-        return create_dictionary(request, request.session['country'], allowed_countries, 'IN_SESSION')
+    if hasattr(request, "session") and "country" in request.session and "region" in request.session:
+        return create_dictionary(request, request.session['country'], request.session['region'], allowed_countries, 'IN_SESSION')
+
+    region_code = None
+
+    if getattr(settings, 'COUNTRY_BLOCK_DEBUG_REGION', False):
+        region_code = settings.COUNTRY_BLOCK_DEBUG_REGION
 
     if getattr(settings, 'COUNTRY_BLOCK_DEBUG_COUNTRY', False):
-        return create_dictionary(request, settings.COUNTRY_BLOCK_DEBUG_COUNTRY, allowed_countries, 'COUNTRY_BLOCK_DEBUG_COUNTRY')
+        return create_dictionary(request, settings.COUNTRY_BLOCK_DEBUG_COUNTRY, region_code, allowed_countries, 'COUNTRY_BLOCK_DEBUG_COUNTRY')
 
     if getattr(settings, 'COUNTRY_BLOCK_DEBUG_OUT_OF_COUNTRY', False):
-        return create_dictionary(request, NO_COUNTRY, allowed_countries, 'COUNTRY_BLOCK_DEBUG_OUT_OF_COUNTRY') # non existent country
+        return create_dictionary(request, NO_COUNTRY, region_code, allowed_countries, 'COUNTRY_BLOCK_DEBUG_OUT_OF_COUNTRY') # non existent country
 
     if getattr(settings, 'COUNTRY_BLOCK_DEBUG', False):
-        return create_dictionary(request, allowed_countries[0], allowed_countries, 'COUNTRY_BLOCK_DEBUG')
+        return create_dictionary(request, allowed_countries[0], region_code, allowed_countries, 'COUNTRY_BLOCK_DEBUG')
 
     #if the visiting user has staff status, let them see everything
     if hasattr(request, "user") and request.user.is_staff:
-        return create_dictionary(request, allowed_countries[0], allowed_countries, 'STAFF_USER')
+        return create_dictionary(request, allowed_countries[0], region_code, allowed_countries, 'STAFF_USER')
 
     if 'HTTP_X_FORWARDED_FOR' in request.META:
         ip = request.META.get('HTTP_X_FORWARDED_FOR').split(",")[0]
@@ -213,25 +228,26 @@ def addgeoip(request):
 
     if ip:
         if ip == "127.0.0.1" or re.match("^192.168.\d{1,3}\.\d{1,3}$", ip):
-            return create_dictionary(request, allowed_countries[0], allowed_countries, 'LOCAL_IP')
+            return create_dictionary(request, allowed_countries[0], region_code, allowed_countries, 'LOCAL_IP')
 
         # Possible choices: FREEGEOIP, MAXMIND... default is just MAXMIND
-        SERVICES = getattr(request, settings, "COUNTRY_BLOCK_SERVICES", ("MAXMIND",))
+        SERVICES = getattr(settings, "COUNTRY_BLOCK_SERVICES", ("MAXMIND",))
         user_country = None
 
         # Always try FREEGEOIP first if configured
         if 'FREEGEOIP' in SERVICES:
-            user_country = get_info_from_freegeoip(request, ip)
+            user_country, region_code = get_info_from_freegeoip(request, ip)
 
         # If MAXMIND is configured and FREEGEOIP is not configured or failed, try MAXMIND
         if not user_country and 'MAXMIND' in SERVICES:
             if getattr(settings, "MAXMIND_USE_LOCAL_DB", False):
                 user_country = GeoIP().country_code(ip)
+                region_code = None
             else:
-                user_country = get_info_from_maxmind(request, ip)
+                user_country, region_code = get_info_from_maxmind(request, ip)
 
-        logger.info("User %s is in %s" % (ip, user_country))
+        logger.info("User %s is in %s / %s" % (ip, user_country, region_code))
 
-        return create_dictionary(request, user_country, allowed_countries, 'FOUND_BY_SERVICE')
+        return create_dictionary(request, user_country, region_code, allowed_countries, 'FOUND_BY_SERVICE')
     else:
-        return create_dictionary(request, NO_COUNTRY, allowed_countries, 'NO_IP')
+        return create_dictionary(request, NO_COUNTRY, None, allowed_countries, 'NO_IP')

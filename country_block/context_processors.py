@@ -198,9 +198,6 @@ def addgeoip(request):
     if not server_location:
         raise ImproperlyConfigured
 
-    if hasattr(request, "session") and "country" in request.session and "region" in request.session:
-        return create_dictionary(request, request.session['country'], request.session['region'], allowed_countries, 'IN_SESSION')
-
     region_code = None
 
     if getattr(settings, 'COUNTRY_BLOCK_DEBUG_REGION', False):
@@ -218,6 +215,9 @@ def addgeoip(request):
     #if the visiting user has staff status, let them see everything
     if hasattr(request, "user") and request.user.is_staff:
         return create_dictionary(request, allowed_countries[0], region_code, allowed_countries, 'STAFF_USER')
+
+    if hasattr(request, "session") and "country" in request.session and "region" in request.session:
+        return create_dictionary(request, request.session['country'], request.session['region'], allowed_countries, 'IN_SESSION')
 
     if 'HTTP_X_FORWARDED_FOR' in request.META:
         ip = request.META.get('HTTP_X_FORWARDED_FOR').split(",")[0]

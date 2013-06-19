@@ -1,0 +1,1562 @@
+[
+    {
+        "pk": 1, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "", 
+            "country_code": "AD"
+        }
+    }, 
+    {
+        "pk": 2, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "", 
+            "country_code": "AE"
+        }
+    }, 
+    {
+        "pk": 3, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "", 
+            "country_code": "AF"
+        }
+    }, 
+    {
+        "pk": 4, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "", 
+            "country_code": "AG"
+        }
+    }, 
+    {
+        "pk": 5, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "", 
+            "country_code": "AL"
+        }
+    }, 
+    {
+        "pk": 6, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "", 
+            "country_code": "AM"
+        }
+    }, 
+    {
+        "pk": 7, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "", 
+            "country_code": "AO"
+        }
+    }, 
+    {
+        "pk": 8, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "", 
+            "country_code": "AR"
+        }
+    }, 
+    {
+        "pk": 9, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "", 
+            "country_code": "BW"
+        }
+    }, 
+    {
+        "pk": 10, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "", 
+            "country_code": "AZ"
+        }
+    }, 
+    {
+        "pk": 11, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "", 
+            "country_code": "BA"
+        }
+    }, 
+    {
+        "pk": 12, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "", 
+            "country_code": "BB"
+        }
+    }, 
+    {
+        "pk": 13, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "", 
+            "country_code": "BD"
+        }
+    }, 
+    {
+        "pk": 14, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "", 
+            "country_code": "BF"
+        }
+    }, 
+    {
+        "pk": 15, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "", 
+            "country_code": "ER"
+        }
+    }, 
+    {
+        "pk": 16, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "", 
+            "country_code": "BH"
+        }
+    }, 
+    {
+        "pk": 17, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "", 
+            "country_code": "BI"
+        }
+    }, 
+    {
+        "pk": 18, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "", 
+            "country_code": "BJ"
+        }
+    }, 
+    {
+        "pk": 19, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "", 
+            "country_code": "BM"
+        }
+    }, 
+    {
+        "pk": 20, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "", 
+            "country_code": "BN"
+        }
+    }, 
+    {
+        "pk": 21, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "", 
+            "country_code": "BO"
+        }
+    }, 
+    {
+        "pk": 22, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "", 
+            "country_code": "BR"
+        }
+    }, 
+    {
+        "pk": 23, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "", 
+            "country_code": "BS"
+        }
+    }, 
+    {
+        "pk": 24, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "", 
+            "country_code": "BT"
+        }
+    }, 
+    {
+        "pk": 25, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "", 
+            "country_code": "CL"
+        }
+    }, 
+    {
+        "pk": 26, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "", 
+            "country_code": "BY"
+        }
+    }, 
+    {
+        "pk": 27, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "", 
+            "country_code": "BZ"
+        }
+    }, 
+    {
+        "pk": 28, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "", 
+            "country_code": "CD"
+        }
+    }, 
+    {
+        "pk": 29, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "", 
+            "country_code": "CF"
+        }
+    }, 
+    {
+        "pk": 30, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "", 
+            "country_code": "CG"
+        }
+    }, 
+    {
+        "pk": 31, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "", 
+            "country_code": "CI"
+        }
+    }, 
+    {
+        "pk": 32, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "Canada", 
+            "country_code": "CA"
+        }
+    }, 
+    {
+        "pk": 33, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "", 
+            "country_code": "CM"
+        }
+    }, 
+    {
+        "pk": 34, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "", 
+            "country_code": "CN"
+        }
+    }, 
+    {
+        "pk": 35, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "", 
+            "country_code": "CO"
+        }
+    }, 
+    {
+        "pk": 36, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "", 
+            "country_code": "CR"
+        }
+    }, 
+    {
+        "pk": 37, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "", 
+            "country_code": "CU"
+        }
+    }, 
+    {
+        "pk": 38, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "", 
+            "country_code": "CV"
+        }
+    }, 
+    {
+        "pk": 39, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "", 
+            "country_code": "DJ"
+        }
+    }, 
+    {
+        "pk": 40, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "United Kingdom", 
+            "country_code": "GB"
+        }
+    }, 
+    {
+        "pk": 41, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "", 
+            "country_code": "DM"
+        }
+    }, 
+    {
+        "pk": 42, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "", 
+            "country_code": "DO"
+        }
+    }, 
+    {
+        "pk": 43, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "", 
+            "country_code": "DZ"
+        }
+    }, 
+    {
+        "pk": 44, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "", 
+            "country_code": "EC"
+        }
+    }, 
+    {
+        "pk": 45, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "", 
+            "country_code": "NG"
+        }
+    }, 
+    {
+        "pk": 46, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "", 
+            "country_code": "PE"
+        }
+    }, 
+    {
+        "pk": 47, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "", 
+            "country_code": "EG"
+        }
+    }, 
+    {
+        "pk": 48, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "", 
+            "country_code": "ET"
+        }
+    }, 
+    {
+        "pk": 49, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "", 
+            "country_code": "FJ"
+        }
+    }, 
+    {
+        "pk": 50, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "", 
+            "country_code": "FM"
+        }
+    }, 
+    {
+        "pk": 51, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "", 
+            "country_code": "GA"
+        }
+    }, 
+    {
+        "pk": 52, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "", 
+            "country_code": "PK"
+        }
+    }, 
+    {
+        "pk": 53, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "", 
+            "country_code": "GD"
+        }
+    }, 
+    {
+        "pk": 54, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "", 
+            "country_code": "RS"
+        }
+    }, 
+    {
+        "pk": 55, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "France", 
+            "country_code": "FR"
+        }
+    }, 
+    {
+        "pk": 56, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "", 
+            "country_code": "GE"
+        }
+    }, 
+    {
+        "pk": 57, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "", 
+            "country_code": "GH"
+        }
+    }, 
+    {
+        "pk": 58, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "", 
+            "country_code": "GL"
+        }
+    }, 
+    {
+        "pk": 59, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "", 
+            "country_code": "GM"
+        }
+    }, 
+    {
+        "pk": 60, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "", 
+            "country_code": "GN"
+        }
+    }, 
+    {
+        "pk": 61, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "", 
+            "country_code": "GQ"
+        }
+    }, 
+    {
+        "pk": 62, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "", 
+            "country_code": "GT"
+        }
+    }, 
+    {
+        "pk": 63, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "", 
+            "country_code": "GW"
+        }
+    }, 
+    {
+        "pk": 64, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "", 
+            "country_code": "GY"
+        }
+    }, 
+    {
+        "pk": 65, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "", 
+            "country_code": "HN"
+        }
+    }, 
+    {
+        "pk": 66, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "", 
+            "country_code": "HR"
+        }
+    }, 
+    {
+        "pk": 67, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "", 
+            "country_code": "HT"
+        }
+    }, 
+    {
+        "pk": 68, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "", 
+            "country_code": "ID"
+        }
+    }, 
+    {
+        "pk": 69, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "", 
+            "country_code": "SL"
+        }
+    }, 
+    {
+        "pk": 70, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "", 
+            "country_code": "IL"
+        }
+    }, 
+    {
+        "pk": 71, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "", 
+            "country_code": "IN"
+        }
+    }, 
+    {
+        "pk": 72, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "", 
+            "country_code": "IQ"
+        }
+    }, 
+    {
+        "pk": 73, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "", 
+            "country_code": "UY"
+        }
+    }, 
+    {
+        "pk": 74, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "", 
+            "country_code": "IR"
+        }
+    }, 
+    {
+        "pk": 75, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "", 
+            "country_code": "JM"
+        }
+    }, 
+    {
+        "pk": 76, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "", 
+            "country_code": "JO"
+        }
+    }, 
+    {
+        "pk": 77, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "Estonia", 
+            "country_code": "EE"
+        }
+    }, 
+    {
+        "pk": 78, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "Slovakia", 
+            "country_code": "SK"
+        }
+    }, 
+    {
+        "pk": 79, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "", 
+            "country_code": "JP"
+        }
+    }, 
+    {
+        "pk": 80, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "", 
+            "country_code": "KE"
+        }
+    }, 
+    {
+        "pk": 81, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "", 
+            "country_code": "KG"
+        }
+    }, 
+    {
+        "pk": 82, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "", 
+            "country_code": "KH"
+        }
+    }, 
+    {
+        "pk": 83, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "", 
+            "country_code": "KI"
+        }
+    }, 
+    {
+        "pk": 84, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "", 
+            "country_code": "KM"
+        }
+    }, 
+    {
+        "pk": 85, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "", 
+            "country_code": "KN"
+        }
+    }, 
+    {
+        "pk": 86, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "", 
+            "country_code": "KP"
+        }
+    }, 
+    {
+        "pk": 87, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "", 
+            "country_code": "KR"
+        }
+    }, 
+    {
+        "pk": 88, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "", 
+            "country_code": "KW"
+        }
+    }, 
+    {
+        "pk": 89, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "", 
+            "country_code": "KY"
+        }
+    }, 
+    {
+        "pk": 90, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "", 
+            "country_code": "KZ"
+        }
+    }, 
+    {
+        "pk": 91, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "", 
+            "country_code": "LA"
+        }
+    }, 
+    {
+        "pk": 92, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "", 
+            "country_code": "LB"
+        }
+    }, 
+    {
+        "pk": 93, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "", 
+            "country_code": "LC"
+        }
+    }, 
+    {
+        "pk": 94, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "", 
+            "country_code": "LK"
+        }
+    }, 
+    {
+        "pk": 95, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "", 
+            "country_code": "LR"
+        }
+    }, 
+    {
+        "pk": 96, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "", 
+            "country_code": "LS"
+        }
+    }, 
+    {
+        "pk": 97, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "", 
+            "country_code": "LY"
+        }
+    }, 
+    {
+        "pk": 98, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "", 
+            "country_code": "MA"
+        }
+    }, 
+    {
+        "pk": 99, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "", 
+            "country_code": "MC"
+        }
+    }, 
+    {
+        "pk": 100, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "", 
+            "country_code": "MD"
+        }
+    }, 
+    {
+        "pk": 101, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "", 
+            "country_code": "MG"
+        }
+    }, 
+    {
+        "pk": 102, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "", 
+            "country_code": "MK"
+        }
+    }, 
+    {
+        "pk": 103, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "", 
+            "country_code": "ML"
+        }
+    }, 
+    {
+        "pk": 104, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "", 
+            "country_code": "MM"
+        }
+    }, 
+    {
+        "pk": 105, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "", 
+            "country_code": "MN"
+        }
+    }, 
+    {
+        "pk": 106, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "", 
+            "country_code": "MO"
+        }
+    }, 
+    {
+        "pk": 107, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "", 
+            "country_code": "MR"
+        }
+    }, 
+    {
+        "pk": 108, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "", 
+            "country_code": "MS"
+        }
+    }, 
+    {
+        "pk": 109, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "", 
+            "country_code": "MU"
+        }
+    }, 
+    {
+        "pk": 110, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "", 
+            "country_code": "MV"
+        }
+    }, 
+    {
+        "pk": 111, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "", 
+            "country_code": "MW"
+        }
+    }, 
+    {
+        "pk": 112, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "", 
+            "country_code": "MX"
+        }
+    }, 
+    {
+        "pk": 113, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "", 
+            "country_code": "MY"
+        }
+    }, 
+    {
+        "pk": 114, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "", 
+            "country_code": "MZ"
+        }
+    }, 
+    {
+        "pk": 115, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "", 
+            "country_code": "NA"
+        }
+    }, 
+    {
+        "pk": 116, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "", 
+            "country_code": "NE"
+        }
+    }, 
+    {
+        "pk": 117, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "", 
+            "country_code": "NI"
+        }
+    }, 
+    {
+        "pk": 118, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "", 
+            "country_code": "NP"
+        }
+    }, 
+    {
+        "pk": 119, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "", 
+            "country_code": "NR"
+        }
+    }, 
+    {
+        "pk": 120, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "", 
+            "country_code": "OM"
+        }
+    }, 
+    {
+        "pk": 121, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "", 
+            "country_code": "PA"
+        }
+    }, 
+    {
+        "pk": 122, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "", 
+            "country_code": "PG"
+        }
+    }, 
+    {
+        "pk": 123, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "", 
+            "country_code": "PH"
+        }
+    }, 
+    {
+        "pk": 124, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "", 
+            "country_code": "PS"
+        }
+    }, 
+    {
+        "pk": 125, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "", 
+            "country_code": "PY"
+        }
+    }, 
+    {
+        "pk": 126, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "", 
+            "country_code": "QA"
+        }
+    }, 
+    {
+        "pk": 127, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "", 
+            "country_code": "RU"
+        }
+    }, 
+    {
+        "pk": 128, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "", 
+            "country_code": "RW"
+        }
+    }, 
+    {
+        "pk": 129, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "", 
+            "country_code": "SA"
+        }
+    }, 
+    {
+        "pk": 130, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "", 
+            "country_code": "SB"
+        }
+    }, 
+    {
+        "pk": 131, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "", 
+            "country_code": "SC"
+        }
+    }, 
+    {
+        "pk": 132, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "", 
+            "country_code": "SD"
+        }
+    }, 
+    {
+        "pk": 133, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "", 
+            "country_code": "SH"
+        }
+    }, 
+    {
+        "pk": 134, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "", 
+            "country_code": "SM"
+        }
+    }, 
+    {
+        "pk": 135, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "", 
+            "country_code": "SN"
+        }
+    }, 
+    {
+        "pk": 136, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "", 
+            "country_code": "SO"
+        }
+    }, 
+    {
+        "pk": 137, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "", 
+            "country_code": "SR"
+        }
+    }, 
+    {
+        "pk": 138, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "", 
+            "country_code": "SS"
+        }
+    }, 
+    {
+        "pk": 139, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "", 
+            "country_code": "ST"
+        }
+    }, 
+    {
+        "pk": 140, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "", 
+            "country_code": "SV"
+        }
+    }, 
+    {
+        "pk": 141, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "", 
+            "country_code": "SY"
+        }
+    }, 
+    {
+        "pk": 142, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "", 
+            "country_code": "SZ"
+        }
+    }, 
+    {
+        "pk": 143, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "", 
+            "country_code": "TD"
+        }
+    }, 
+    {
+        "pk": 144, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "", 
+            "country_code": "TG"
+        }
+    }, 
+    {
+        "pk": 145, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "", 
+            "country_code": "TH"
+        }
+    }, 
+    {
+        "pk": 146, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "", 
+            "country_code": "TJ"
+        }
+    }, 
+    {
+        "pk": 147, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "", 
+            "country_code": "TM"
+        }
+    }, 
+    {
+        "pk": 148, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "", 
+            "country_code": "TN"
+        }
+    }, 
+    {
+        "pk": 149, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "", 
+            "country_code": "TO"
+        }
+    }, 
+    {
+        "pk": 150, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "", 
+            "country_code": "TR"
+        }
+    }, 
+    {
+        "pk": 151, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "", 
+            "country_code": "TT"
+        }
+    }, 
+    {
+        "pk": 152, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "", 
+            "country_code": "TW"
+        }
+    }, 
+    {
+        "pk": 153, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "", 
+            "country_code": "TZ"
+        }
+    }, 
+    {
+        "pk": 154, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "", 
+            "country_code": "UA"
+        }
+    }, 
+    {
+        "pk": 155, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "", 
+            "country_code": "UG"
+        }
+    }, 
+    {
+        "pk": 156, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "", 
+            "country_code": "UZ"
+        }
+    }, 
+    {
+        "pk": 157, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "", 
+            "country_code": "VC"
+        }
+    }, 
+    {
+        "pk": 158, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "", 
+            "country_code": "VE"
+        }
+    }, 
+    {
+        "pk": 159, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "", 
+            "country_code": "VN"
+        }
+    }, 
+    {
+        "pk": 160, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "", 
+            "country_code": "VU"
+        }
+    }, 
+    {
+        "pk": 161, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "", 
+            "country_code": "WS"
+        }
+    }, 
+    {
+        "pk": 162, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "", 
+            "country_code": "YE"
+        }
+    }, 
+    {
+        "pk": 163, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "", 
+            "country_code": "ZA"
+        }
+    }, 
+    {
+        "pk": 164, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "", 
+            "country_code": "ZM"
+        }
+    }, 
+    {
+        "pk": 165, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "", 
+            "country_code": "ZW"
+        }
+    }, 
+    {
+        "pk": 166, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "Cyprus", 
+            "country_code": "CY"
+        }
+    }, 
+    {
+        "pk": 167, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "Finland", 
+            "country_code": "FI"
+        }
+    }, 
+    {
+        "pk": 168, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "United States", 
+            "country_code": "US"
+        }
+    }, 
+    {
+        "pk": 169, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "Switzerland", 
+            "country_code": "CH"
+        }
+    }, 
+    {
+        "pk": 170, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "Australia", 
+            "country_code": "AU"
+        }
+    }, 
+    {
+        "pk": 171, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "New Zealand", 
+            "country_code": "NZ"
+        }
+    }, 
+    {
+        "pk": 172, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "Slovenia", 
+            "country_code": "SI"
+        }
+    }, 
+    {
+        "pk": 173, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "Belgium", 
+            "country_code": "BE"
+        }
+    }, 
+    {
+        "pk": 174, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "Austria", 
+            "country_code": "AT"
+        }
+    }, 
+    {
+        "pk": 175, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "Bulgaria", 
+            "country_code": "BG"
+        }
+    }, 
+    {
+        "pk": 176, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "Italy", 
+            "country_code": "IT"
+        }
+    }, 
+    {
+        "pk": 177, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "Poland", 
+            "country_code": "PL"
+        }
+    }, 
+    {
+        "pk": 178, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "Czech Republic", 
+            "country_code": "CZ"
+        }
+    }, 
+    {
+        "pk": 179, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "Portugal", 
+            "country_code": "PT"
+        }
+    }, 
+    {
+        "pk": 180, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "Denmark", 
+            "country_code": "DK"
+        }
+    }, 
+    {
+        "pk": 181, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "Latvia", 
+            "country_code": "LV"
+        }
+    }, 
+    {
+        "pk": 182, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "Romania", 
+            "country_code": "RO"
+        }
+    }, 
+    {
+        "pk": 183, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "Germany", 
+            "country_code": "DE"
+        }
+    }, 
+    {
+        "pk": 184, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "Lithuania", 
+            "country_code": "LT"
+        }
+    }, 
+    {
+        "pk": 185, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "Luxembourg", 
+            "country_code": "LU"
+        }
+    }, 
+    {
+        "pk": 186, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "Hungary", 
+            "country_code": "HU"
+        }
+    }, 
+    {
+        "pk": 187, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "Greece", 
+            "country_code": "GR"
+        }
+    }, 
+    {
+        "pk": 188, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "Malta", 
+            "country_code": "MT"
+        }
+    }, 
+    {
+        "pk": 189, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "Sweden", 
+            "country_code": "SE"
+        }
+    }, 
+    {
+        "pk": 190, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "Spain", 
+            "country_code": "ES"
+        }
+    }, 
+    {
+        "pk": 191, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "Netherlands", 
+            "country_code": "NL"
+        }
+    }, 
+    {
+        "pk": 192, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "Iceland", 
+            "country_code": "IS"
+        }
+    }, 
+    {
+        "pk": 193, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "Norway", 
+            "country_code": "NO"
+        }
+    }, 
+    {
+        "pk": 194, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "Liechtenstein", 
+            "country_code": "LI"
+        }
+    }, 
+    {
+        "pk": 195, 
+        "model": "country_block.country", 
+        "fields": {
+            "country_name": "Ireland", 
+            "country_code": "IE"
+        }
+    }
+]

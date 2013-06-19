@@ -5,6 +5,7 @@ import re
 import requests
 from django.conf import settings
 import sys
+from country_block.models import Settings
 
 try:
     from django.contrib.gis.geoip import GeoIP
@@ -72,7 +73,7 @@ def get_info_from_freegeoip(request, ip):
     logger.info("\n")
     return dict.get("country_code"), dict.get("region_code")
 
-def get_info_from_maxmind(request, ip):
+def get_info_from_maxmind(request, ip, license_key):
 
     fields = ['country_code',
               # 'country_name',
@@ -99,11 +100,10 @@ def get_info_from_maxmind(request, ip):
               # 'postal_confidence',
               'error']
 
-    LICENSE_KEY = getattr(settings, "MAXMIND_LICENSE_KEY", False)
-    if not LICENSE_KEY:
+    if not license_key:
         raise ImproperlyConfigured
 
-    payload = {'l': LICENSE_KEY, 'i': ip}
+    payload = {'l': license_key, 'i': ip}
     url = 'https://geoip.maxmind.com/a'
 
     try:
@@ -169,7 +169,7 @@ def create_dictionary(request, user_country, region_code, allowed_countries, mes
 
     ret_dict = {'country': user_country,
                 'region': region_code,
-                'in_country': bool(user_country in allowed_countries)}
+                'in_country': allowed_countries.filter(country_code=user_country).exists()}
 
     if message:
         logger.info("(%s) Returning: %s" % (message, ret_dict))
@@ -192,10 +192,19 @@ def addgeoip(request):
 
     #what country should the server be set to
     server_location = getattr(settings, 'LOCATION', None)
-    #countries that are allowed to see content
-    allowed_countries = getattr(settings, 'COUNTRY_BLOCK_ALLOWED_COUNTRIES', server_location)
 
     if not server_location:
+        raise ImproperlyConfigured
+
+    try:
+        server_settings = Settings.objects.prefetch_related('allowed_countries').get(location=server_location)
+    except Settings.DoesNotExist:
+        raise ImproperlyConfigured
+
+    #countries that are allowed to see content
+    allowed_countries = server_settings.allowed_countries.all()
+
+    if not allowed_countries:
         raise ImproperlyConfigured
 
     region_code = None
@@ -206,15 +215,9 @@ def addgeoip(request):
     if getattr(settings, 'COUNTRY_BLOCK_DEBUG_COUNTRY', False):
         return create_dictionary(request, settings.COUNTRY_BLOCK_DEBUG_COUNTRY, region_code, allowed_countries, 'COUNTRY_BLOCK_DEBUG_COUNTRY')
 
-    if getattr(settings, 'COUNTRY_BLOCK_DEBUG_OUT_OF_COUNTRY', False):
-        return create_dictionary(request, NO_COUNTRY, region_code, allowed_countries, 'COUNTRY_BLOCK_DEBUG_OUT_OF_COUNTRY') # non existent country
-
-    if getattr(settings, 'COUNTRY_BLOCK_DEBUG', False):
-        return create_dictionary(request, allowed_countries[0], region_code, allowed_countries, 'COUNTRY_BLOCK_DEBUG')
-
     #if the visiting user has staff status, let them see everything
     if hasattr(request, "user") and request.user.is_staff:
-        return create_dictionary(request, allowed_countries[0], region_code, allowed_countries, 'STAFF_USER')
+        return create_dictionary(request, server_settings.staff_user_country.country_code, region_code, allowed_countries, 'STAFF_USER')
 
     if hasattr(request, "session") and "country" in request.session and "region" in request.session:
         return create_dictionary(request, request.session['country'], request.session['region'], allowed_countries, 'IN_SESSION')
@@ -228,23 +231,21 @@ def addgeoip(request):
 
     if ip:
         if ip == "127.0.0.1" or re.match("^192.168.\d{1,3}\.\d{1,3}$", ip):
-            return create_dictionary(request, allowed_countries[0], region_code, allowed_countries, 'LOCAL_IP')
+            return create_dictionary(request, server_settings.local_ip_user_country.country_code, region_code, allowed_countries, 'LOCAL_IP')
 
-        # Possible choices: FREEGEOIP, MAXMIND... default is just MAXMIND
-        SERVICES = getattr(settings, "COUNTRY_BLOCK_SERVICES", ("MAXMIND",))
         user_country = None
 
         # Always try FREEGEOIP first if configured
-        if 'FREEGEOIP' in SERVICES:
+        if server_settings.free_geo_ip_enabled:
             user_country, region_code = get_info_from_freegeoip(request, ip)
 
         # If MAXMIND is configured and FREEGEOIP is not configured or failed, try MAXMIND
-        if not user_country and 'MAXMIND' in SERVICES:
-            if getattr(settings, "MAXMIND_USE_LOCAL_DB", False):
+        if not user_country and server_settings.maxmind_enabled:
+            if server_settings.maxmind_local_db_enabled:
                 user_country = GeoIP().country_code(ip)
                 region_code = None
             else:
-                user_country, region_code = get_info_from_maxmind(request, ip)
+                user_country, region_code = get_info_from_maxmind(request, ip, server_settings.maxmind_license_key)
 
         logger.info("User %s is in %s / %s" % (ip, user_country, region_code))
 

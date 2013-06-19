@@ -8,10 +8,11 @@ This will give you a user_country variable in your context and a country variabl
 with the user's 2 character ISO country code, and an in_country boolean set to True is the country matches one of
 the allowed countries.
 
-Settings options
-================
-COUNTRY_BLOCK_ALLOWED_COUNTRIES : list of country codes that will trigger in_country == True if it contains
-the user's country code
+==========================================================
+Local Settings options
+==========================================================
+
+LOCATION : a unique 2 char string that identifies the server's location
 
 COUNTRY_BLOCK_DEBUG_COUNTRY : sets the user_country equal to this value for all users, letting you test as if you are in
 this country. False by default.
@@ -19,20 +20,27 @@ this country. False by default.
 COUNTRY_BLOCK_DEBUG_REGION : sets the region_code equal to this value for all users, letting you test as if you are in
 this region. False by default.
 
-COUNTRY_BLOCK_DEBUG : sets the user_country equal to the first allowed country in the list,
-letting you test as if you are in the first allowed country. False by default.
+==========================================================
+Database Settings options (country_block.Settings model)
+==========================================================
 
-COUNTRY_BLOCK_DEBUG_OUT_OF_COUNTRY : sets the user_country to a non-allowed (non-existent) country,
-letting you test as if you are in the non-allowed country. False by default.
+location : This is a unique 2 char value that corresponds to the LOCATION value in the local settings
 
-COUNTRY_BLOCK_SERVICES : list of services which can contain "MAXMIND" and/or "FREEGEOIP". If both "MAXMIND" and
-"FREEGEOIP" are configured, the processor will try using the freegeoip.net service first and fall back on executing the
-Maxmind code if freegeoip fails for some reason. The COUNTRY_BLOCK_SERVICES list contains only "MAXMIND" by default.
+free_geo_ip_enabled : Use the freegeoip.net to determine the geography of the user's IP
 
-MAXMIND_USE_LOCAL_DB : If this is True, use the django.contrib.gis.geoip.GeoIP module instead of the
-https://geoip.maxmind.com/a service which requires a local Maxmind database. True is required if COUNTRY_BLOCK_SERVICES
-contains "MAXMIND" and you do not wish to use the https://geoip.maxmind.com/a service. False by default.
+maxmind_enabled : Use the https://geoip.maxmind.com/a service to determine the geography of the user's IP.
+If this is True and free_geo_ip_enabled is also True, the context processor will try the freegeoip.net service first
+and will only try the Maxmind service if freegeoip.net fails.
 
-MAXMIND_LICENSE_KEY : The license key for Maxmind. A value is required if COUNTRY_BLOCK_SERVICES contains "MAXMIND"
-and MAXMIND_USE_LOCAL_DB is False. This gets sent over as the 'l' parameter in the payload to
-https://geoip.maxmind.com/a
+maxmind_local_db_enabled : Use a local Maxmind database instead of the https://geoip.maxmind.com/a service. Must also
+have maxmind_enabled set to True.
+
+allowed_countries : A M2M relationship of all Countrys that are allowed for the server's location
+
+staff_user_country : The Country that all django staff users will be assigned
+
+local_ip_user_country : The Country that all local IP users will be assigned
+
+maxmind_license_key : The license key for the Maxmind service. A value is required if maxmind_enabled is True
+and maxmind_local_db_enabled is False. This gets sent over as the 'l' parameter in the payload to the
+https://geoip.maxmind.com/a service.

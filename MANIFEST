@@ -4,3 +4,12 @@ country_block/__init__.py
 country_block/admin.py
 country_block/context_processors.py
 country_block/models.py
+country_block/fixtures/country.json
+country_block/migrations/0001_initial.py
+country_block/migrations/0001_initial.pyc
+country_block/migrations/0002_load_country_data.py
+country_block/migrations/0002_load_country_data.pyc
+country_block/migrations/0003_auto__add_field_settings_maxmind_license_key.py
+country_block/migrations/0003_auto__add_field_settings_maxmind_license_key.pyc
+country_block/migrations/__init__.py
+country_block/migrations/__init__.pyc

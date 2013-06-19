@@ -1,2 +1,4 @@
 include README.md
 include setup.py
+recursive-include country_block/migrations *
+recursive-include country_block/fixtures *

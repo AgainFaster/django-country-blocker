@@ -1,4 +1,6 @@
 README.md
 setup.py
 country_block/__init__.py
+country_block/admin.py
 country_block/context_processors.py
+country_block/models.py

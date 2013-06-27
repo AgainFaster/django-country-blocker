@@ -17,6 +17,21 @@ import logging
 logger = logging.getLogger(__name__)
 NO_COUNTRY = '00'
 
+server_location = getattr(settings, 'LOCATION', None)
+
+if not server_location:
+    raise ImproperlyConfigured
+
+try:
+    server_settings = Settings.objects.prefetch_related('allowed_countries').get(location=server_location)
+except Settings.DoesNotExist:
+    raise ImproperlyConfigured
+
+allowed_countries = server_settings.allowed_countries.all()
+
+if not allowed_countries:
+    raise ImproperlyConfigured
+
 def log_error(request, message, extra=None):
     logger.info("(Error) %s\n" % message)
     data = client.get_data_from_request(request)
@@ -151,12 +166,12 @@ def get_info_from_maxmind(request, ip, license_key):
     logger.info("\n")
     return omni.get("country_code"), False
 
-def create_dictionary(request, user_country, region_code, allowed_countries, message=None):
+def create_dictionary(request, user_country, region_code, message=None):
     if user_country:
         user_country = user_country.upper()
-        # special case for reserved IP, e.g. 192.168.1.1
+        # special case for reserved IP, e.g. 192.168.1.1, 10.181.1.1
         if user_country == 'RD':
-            user_country = allowed_countries[0]
+            user_country = server_settings.local_ip_user_country.country_code
             message = 'LOCAL_RESERVED_IP'
     else:
         # an error should already be logged at this point
@@ -190,40 +205,26 @@ def addgeoip(request):
     allowed countries
     """
 
-    #what country should the server be set to
-    server_location = getattr(settings, 'LOCATION', None)
-
-    if not server_location:
-        raise ImproperlyConfigured
-
-    try:
-        server_settings = Settings.objects.prefetch_related('allowed_countries').get(location=server_location)
-    except Settings.DoesNotExist:
-        raise ImproperlyConfigured
-
-    #countries that are allowed to see content
-    allowed_countries = server_settings.allowed_countries.all()
-
-    if not allowed_countries:
-        raise ImproperlyConfigured
-
     region_code = None
 
     if getattr(settings, 'COUNTRY_BLOCK_DEBUG_REGION', False):
         region_code = settings.COUNTRY_BLOCK_DEBUG_REGION
 
     if getattr(settings, 'COUNTRY_BLOCK_DEBUG_COUNTRY', False):
-        return create_dictionary(request, settings.COUNTRY_BLOCK_DEBUG_COUNTRY, region_code, allowed_countries, 'COUNTRY_BLOCK_DEBUG_COUNTRY')
+        return create_dictionary(request, settings.COUNTRY_BLOCK_DEBUG_COUNTRY, region_code, 'COUNTRY_BLOCK_DEBUG_COUNTRY')
 
     #if the visiting user has staff status, let them see everything
     if hasattr(request, "user") and request.user.is_staff:
-        return create_dictionary(request, server_settings.staff_user_country.country_code, region_code, allowed_countries, 'STAFF_USER')
+        return create_dictionary(request, server_settings.staff_user_country.country_code, region_code, 'STAFF_USER')
 
     if hasattr(request, "session") and "country" in request.session and "region" in request.session:
-        return create_dictionary(request, request.session['country'], request.session['region'], allowed_countries, 'IN_SESSION')
+        return create_dictionary(request, request.session['country'], request.session['region'], 'IN_SESSION')
 
     if 'HTTP_X_FORWARDED_FOR' in request.META:
-        ip = request.META.get('HTTP_X_FORWARDED_FOR').split(",")[0]
+        # get the last HTTP_X_FORWARDED_FOR ip address
+        # the format is "client, proxy1, proxy2", so we want the last proxy because the client may be a reserved ip
+        ip_addresses = request.META.get('HTTP_X_FORWARDED_FOR').split(",")
+        ip = ip_addresses[len(ip_addresses)-1].strip()
     else:
         ip = request.META.get('REMOTE_ADDR', False)
 
@@ -231,7 +232,7 @@ def addgeoip(request):
 
     if ip:
         if ip == "127.0.0.1" or re.match("^192.168.\d{1,3}\.\d{1,3}$", ip):
-            return create_dictionary(request, server_settings.local_ip_user_country.country_code, region_code, allowed_countries, 'LOCAL_IP')
+            return create_dictionary(request, server_settings.local_ip_user_country.country_code, region_code, 'LOCAL_IP')
 
         user_country = None
 
@@ -249,6 +250,6 @@ def addgeoip(request):
 
         logger.info("User %s is in %s / %s" % (ip, user_country, region_code))
 
-        return create_dictionary(request, user_country, region_code, allowed_countries, 'FOUND_BY_SERVICE')
+        return create_dictionary(request, user_country, region_code, 'FOUND_BY_SERVICE')
     else:
-        return create_dictionary(request, NO_COUNTRY, None, allowed_countries, 'NO_IP')
+        return create_dictionary(request, NO_COUNTRY, None, 'NO_IP')

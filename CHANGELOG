@@ -1,3 +1,6 @@
+v1.1.8
+Moved country block settings query to a function so query doesn't happen automatically
+
 v1.1.7
 Fix to detect proxy ip country and also assign the correct country for local reserved ip's
 

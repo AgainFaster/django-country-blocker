@@ -5,7 +5,7 @@ import re
 import requests
 from django.conf import settings
 import sys
-from country_block.models import Settings
+from country_block.models import Settings as CountryBlockSettings
 
 try:
     from django.contrib.gis.geoip import GeoIP
@@ -17,20 +17,23 @@ import logging
 logger = logging.getLogger(__name__)
 NO_COUNTRY = '00'
 
-server_location = getattr(settings, 'LOCATION', None)
+def get_settings():
+    server_location = getattr(settings, 'LOCATION', None)
 
-if not server_location:
-    raise ImproperlyConfigured
+    if not server_location:
+        raise ImproperlyConfigured
 
-try:
-    server_settings = Settings.objects.prefetch_related('allowed_countries').get(location=server_location)
-except Settings.DoesNotExist:
-    raise ImproperlyConfigured
+    try:
+        cb_settings = CountryBlockSettings.objects.prefetch_related('allowed_countries').get(location=server_location)
+    except CountryBlockSettings.DoesNotExist:
+        raise ImproperlyConfigured
 
-allowed_countries = server_settings.allowed_countries.all()
+    allowed_countries = cb_settings.allowed_countries.all()
 
-if not allowed_countries:
-    raise ImproperlyConfigured
+    if not allowed_countries:
+        raise ImproperlyConfigured
+
+    return cb_settings, allowed_countries
 
 def log_error(request, message, extra=None):
     logger.info("(Error) %s\n" % message)
@@ -167,11 +170,13 @@ def get_info_from_maxmind(request, ip, license_key):
     return omni.get("country_code"), False
 
 def create_dictionary(request, user_country, region_code, message=None):
+    cb_settings, allowed_countries = get_settings()
+
     if user_country:
         user_country = user_country.upper()
         # special case for reserved IP, e.g. 192.168.1.1, 10.181.1.1
         if user_country == 'RD':
-            user_country = server_settings.local_ip_user_country.country_code
+            user_country = cb_settings.local_ip_user_country.country_code
             message = 'LOCAL_RESERVED_IP'
     else:
         # an error should already be logged at this point
@@ -205,6 +210,7 @@ def addgeoip(request):
     allowed countries
     """
 
+    cb_settings, allowed_countries = get_settings()
     region_code = None
 
     if getattr(settings, 'COUNTRY_BLOCK_DEBUG_REGION', False):
@@ -215,7 +221,7 @@ def addgeoip(request):
 
     #if the visiting user has staff status, let them see everything
     if hasattr(request, "user") and request.user.is_staff:
-        return create_dictionary(request, server_settings.staff_user_country.country_code, region_code, 'STAFF_USER')
+        return create_dictionary(request, cb_settings.staff_user_country.country_code, region_code, 'STAFF_USER')
 
     if hasattr(request, "session") and "country" in request.session and "region" in request.session:
         return create_dictionary(request, request.session['country'], request.session['region'], 'IN_SESSION')
@@ -232,21 +238,21 @@ def addgeoip(request):
 
     if ip:
         if ip == "127.0.0.1" or re.match("^192.168.\d{1,3}\.\d{1,3}$", ip):
-            return create_dictionary(request, server_settings.local_ip_user_country.country_code, region_code, 'LOCAL_IP')
+            return create_dictionary(request, cb_settings.local_ip_user_country.country_code, region_code, 'LOCAL_IP')
 
         user_country = None
 
         # Always try FREEGEOIP first if configured
-        if server_settings.free_geo_ip_enabled:
+        if cb_settings.free_geo_ip_enabled:
             user_country, region_code = get_info_from_freegeoip(request, ip)
 
         # If MAXMIND is configured and FREEGEOIP is not configured or failed, try MAXMIND
-        if not user_country and server_settings.maxmind_enabled:
-            if server_settings.maxmind_local_db_enabled:
+        if not user_country and cb_settings.maxmind_enabled:
+            if cb_settings.maxmind_local_db_enabled:
                 user_country = GeoIP().country_code(ip)
                 region_code = None
             else:
-                user_country, region_code = get_info_from_maxmind(request, ip, server_settings.maxmind_license_key)
+                user_country, region_code = get_info_from_maxmind(request, ip, cb_settings.maxmind_license_key)
 
         logger.info("User %s is in %s / %s" % (ip, user_country, region_code))
 

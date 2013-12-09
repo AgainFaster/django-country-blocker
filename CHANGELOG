@@ -1,3 +1,6 @@
+v1.1.9
+Use HTTP_X_CLUSTER_CLIENT_IP if it is available.
+
 v1.1.8
 Moved country block settings query to a function so query doesn't happen automatically
 

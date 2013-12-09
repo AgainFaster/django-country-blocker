@@ -226,7 +226,9 @@ def addgeoip(request):
     if hasattr(request, "session") and "country" in request.session and "region" in request.session:
         return create_dictionary(request, request.session['country'], request.session['region'], 'IN_SESSION')
 
-    if 'HTTP_X_FORWARDED_FOR' in request.META:
+    if 'HTTP_X_CLUSTER_CLIENT_IP' in request.META:
+        ip = request.META.get('HTTP_X_CLUSTER_CLIENT_IP', False)
+    elif 'HTTP_X_FORWARDED_FOR' in request.META:
         # get the last HTTP_X_FORWARDED_FOR ip address
         # the format is "client, proxy1, proxy2", so we want the last proxy because the client may be a reserved ip
         ip_addresses = request.META.get('HTTP_X_FORWARDED_FOR').split(",")

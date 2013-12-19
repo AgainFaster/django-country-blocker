@@ -1,4 +1,5 @@
 import csv
+from django.core.cache import cache
 from django.core.exceptions import ImproperlyConfigured
 from raven.contrib.django.models import client
 import re
@@ -23,12 +24,21 @@ def get_settings():
     if not server_location:
         raise ImproperlyConfigured
 
-    try:
-        cb_settings = CountryBlockSettings.objects.prefetch_related('allowed_countries').get(location=server_location)
-    except CountryBlockSettings.DoesNotExist:
-        raise ImproperlyConfigured
+    key = 'country_block_settings'
+    cb_settings = cache.get(key)
+    if not cb_settings:
+        try:
+            cb_settings = CountryBlockSettings.objects.prefetch_related('allowed_countries').get(location=server_location)
+        except CountryBlockSettings.DoesNotExist:
+            raise ImproperlyConfigured
 
-    allowed_countries = cb_settings.allowed_countries.all()
+        cache.set(key, cb_settings, 60*60*24*7)
+
+    key = 'country_block_allowed_countries'
+    allowed_countries = cache.get(key)
+    if not allowed_countries:
+        allowed_countries = cb_settings.allowed_countries.all()
+        cache.set(key, allowed_countries, 60*60*24*7)
 
     if not allowed_countries:
         raise ImproperlyConfigured
@@ -210,8 +220,14 @@ def addgeoip(request):
     allowed countries
     """
 
-    cb_settings, allowed_countries = get_settings()
     region_code = None
+
+    try:
+        cb_settings, allowed_countries = get_settings()
+    except ImproperlyConfigured:
+        ret_dict = {'country': NO_COUNTRY, 'region': None, 'in_country': False}
+        logger.info("(IMPROPERLY_CONFIGURED) Returning: %s" % ret_dict)
+        return ret_dict
 
     if getattr(settings, 'COUNTRY_BLOCK_DEBUG_REGION', False):
         region_code = settings.COUNTRY_BLOCK_DEBUG_REGION

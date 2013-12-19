@@ -1,3 +1,6 @@
+v1.1.10
+Cache settings.
+
 v1.1.9
 Use HTTP_X_CLUSTER_CLIENT_IP if it is available.
 

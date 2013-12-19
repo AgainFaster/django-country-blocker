@@ -14,7 +14,7 @@ CLASSIFIERS = [
 
 setup(
     name='django-country-blocker',
-    version='1.1.9',
+    version='1.1.10',
     packages=['country_block', 'country_block.migrations'],
     package_data={'country_block': ['fixtures/*.json']},
     url='http://www.github.com/jslootbeek/django-country-blocker',

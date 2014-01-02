@@ -20,6 +20,8 @@ class Settings(models.Model):
     maxmind_local_db_enabled = models.BooleanField(default=False)
     maxmind_license_key = models.CharField(max_length=25, default="")
     allowed_countries = models.ManyToManyField(Country)
+    free_geo_ip_timeout = models.FloatField(default=2.00, help_text="Timeout for requests to freegeoip")
+    maxmind_timeout = models.FloatField(default=6.00, help_text="Timeout for requests to maxmind")
 
     staff_user_country = models.ForeignKey(Country, related_name='staff_user_settings')
     local_ip_user_country = models.ForeignKey(Country, related_name='local_ip_user_settings')
@@ -31,3 +33,7 @@ class Settings(models.Model):
 
     def __unicode__(self):
         return "%s settings" % self.location
+
+    class Meta:
+        verbose_name="Settings"
+        verbose_name_plural="Settings"

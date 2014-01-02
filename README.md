@@ -28,9 +28,13 @@ location : This is a unique 2 char value that corresponds to the LOCATION value 
 
 free_geo_ip_enabled : Use the freegeoip.net to determine the geography of the user's IP
 
+free_geo_ip_timeout : freegeoip.net request timeout in seconds (default is 2 seconds)
+
 maxmind_enabled : Use the https://geoip.maxmind.com/a service to determine the geography of the user's IP.
 If this is True and free_geo_ip_enabled is also True, the context processor will try the freegeoip.net service first
 and will only try the Maxmind service if freegeoip.net fails.
+
+maxmind_timeout : maxmind.com request timeout in seconds (default is 6 seconds)
 
 maxmind_local_db_enabled : Use a local Maxmind database instead of the https://geoip.maxmind.com/a service. Must also
 have maxmind_enabled set to True.

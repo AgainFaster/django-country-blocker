@@ -57,12 +57,12 @@ def log_error(request, message, extra=None):
                    data=data,
                    extra=extra)
 
-def get_info_from_freegeoip(request, ip):
+def get_info_from_freegeoip(request, ip, timeout):
 
     url = "http://freegeoip.net/json/%s" % ip
 
     try:
-        response = requests.get(url=url)
+        response = requests.get(url=url, timeout=timeout)
     except: # catch *all* exceptions
         e = sys.exc_info()[0]
         message = "FreeGeoIP request exception: %s" % e
@@ -101,7 +101,7 @@ def get_info_from_freegeoip(request, ip):
     logger.info("\n")
     return dict.get("country_code"), dict.get("region_code")
 
-def get_info_from_maxmind(request, ip, license_key):
+def get_info_from_maxmind(request, ip, license_key, timeout):
 
     fields = ['country_code',
               # 'country_name',
@@ -135,7 +135,7 @@ def get_info_from_maxmind(request, ip, license_key):
     url = 'https://geoip.maxmind.com/a'
 
     try:
-        response = requests.get(url, params=payload)
+        response = requests.get(url, params=payload, timeout=timeout)
     except: # catch *all* exceptions
         e = sys.exc_info()[0]
         message = "Maxmind request exception: %s" % e
@@ -262,7 +262,7 @@ def addgeoip(request):
 
         # Always try FREEGEOIP first if configured
         if cb_settings.free_geo_ip_enabled:
-            user_country, region_code = get_info_from_freegeoip(request, ip)
+            user_country, region_code = get_info_from_freegeoip(request, ip, cb_settings.free_geo_ip_timeout)
 
         # If MAXMIND is configured and FREEGEOIP is not configured or failed, try MAXMIND
         if not user_country and cb_settings.maxmind_enabled:
@@ -270,7 +270,7 @@ def addgeoip(request):
                 user_country = GeoIP().country_code(ip)
                 region_code = None
             else:
-                user_country, region_code = get_info_from_maxmind(request, ip, cb_settings.maxmind_license_key)
+                user_country, region_code = get_info_from_maxmind(request, ip, cb_settings.maxmind_license_key, cb_settings.maxmind_timeout)
 
         logger.info("User %s is in %s / %s" % (ip, user_country, region_code))
 

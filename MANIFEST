@@ -11,5 +11,7 @@ country_block/migrations/0002_load_country_data.py
 country_block/migrations/0002_load_country_data.pyc
 country_block/migrations/0003_auto__add_field_settings_maxmind_license_key.py
 country_block/migrations/0003_auto__add_field_settings_maxmind_license_key.pyc
+country_block/migrations/0004_auto__add_request_timeouts.py
+country_block/migrations/0004_auto__add_request_timeouts.pyc
 country_block/migrations/__init__.py
 country_block/migrations/__init__.pyc

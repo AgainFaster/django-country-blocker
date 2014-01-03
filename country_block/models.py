@@ -13,6 +13,10 @@ class Country(models.Model):
     def __unicode__(self):
         return "(%s) %s" % (self.country_code, self.country_name)
 
+    class Meta:
+        verbose_name = "Country"
+        verbose_name_plural = "Countries"
+
 class Settings(models.Model):
     location = models.CharField(max_length=2, unique=True)
     free_geo_ip_enabled = models.BooleanField(default=True)
@@ -35,5 +39,5 @@ class Settings(models.Model):
         return "%s settings" % self.location
 
     class Meta:
-        verbose_name="Settings"
-        verbose_name_plural="Settings"
+        verbose_name = "Settings"
+        verbose_name_plural = "Settings"

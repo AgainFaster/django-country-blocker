@@ -1,3 +1,11 @@
+.. image:: https://pypip.in/v/django-country-blocker/badge.png
+    :target: https://pypi.python.org/pypi/django-country-blocker/
+    :alt: Latest Version
+
+.. image:: https://pypip.in/d/django-country-blocker/badge.png
+    :target: https://pypi.python.org/pypi//django-country-blocker/
+    :alt: Downloads
+
 django-country-blocker
 ======================
 

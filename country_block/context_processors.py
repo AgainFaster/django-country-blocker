@@ -6,7 +6,8 @@ import re
 import requests
 from django.conf import settings
 import sys
-from country_block.models import Settings as CountryBlockSettings
+from country_block.models import Settings as CountryBlockSettings, ErrorLog
+from datetime import datetime, timedelta
 
 try:
     from django.contrib.gis.geoip import GeoIP
@@ -17,6 +18,8 @@ import logging
 
 logger = logging.getLogger(__name__)
 NO_COUNTRY = '00'
+COUNTRY_BLOCK_SETTINGS_KEY = 'country_block_settings'
+COUNTRY_BLOCK_ALLOWED_COUNTRIES_KEY = 'country_block_allowed_countries'
 
 def get_settings():
     server_location = getattr(settings, 'LOCATION', None)
@@ -24,21 +27,19 @@ def get_settings():
     if not server_location:
         raise ImproperlyConfigured
 
-    key = 'country_block_settings'
-    cb_settings = cache.get(key)
+    cb_settings = cache.get(COUNTRY_BLOCK_SETTINGS_KEY)
     if not cb_settings:
         try:
             cb_settings = CountryBlockSettings.objects.prefetch_related('allowed_countries').get(location=server_location)
         except CountryBlockSettings.DoesNotExist:
             raise ImproperlyConfigured
 
-        cache.set(key, cb_settings, 60*60*24*7)
+        cache.set(COUNTRY_BLOCK_SETTINGS_KEY, cb_settings, 60*60*24*7)
 
-    key = 'country_block_allowed_countries'
-    allowed_countries = cache.get(key)
+    allowed_countries = cache.get(COUNTRY_BLOCK_ALLOWED_COUNTRIES_KEY)
     if not allowed_countries:
         allowed_countries = cb_settings.allowed_countries.all()
-        cache.set(key, allowed_countries, 60*60*24*7)
+        cache.set(COUNTRY_BLOCK_ALLOWED_COUNTRIES_KEY, allowed_countries, 60*60*24*7)
 
     if not allowed_countries:
         raise ImproperlyConfigured
@@ -57,6 +58,28 @@ def log_error(request, message, extra=None):
                    data=data,
                    extra=extra)
 
+
+def manage_freegeoip_error():
+
+    cb_settings, allowed_countries = get_settings()
+
+    # default these values in case they are not already in the cached cb_settings
+    free_geo_ip_error_window = getattr(cb_settings, 'free_geo_ip_error_window', 3600.00)
+    free_geo_ip_error_threshold = getattr(cb_settings, 'free_geo_ip_error_threshold', 10)
+    free_geo_ip_error_sleep = getattr(cb_settings, 'free_geo_ip_error_sleep', 3600.00)
+
+    oldest_error = datetime.now() - timedelta(seconds=free_geo_ip_error_window)
+    ErrorLog.objects.filter(type='freegeoip', created__lt=oldest_error).delete()
+    ErrorLog.objects.create(type='freegeoip')
+
+    if ErrorLog.objects.filter(type='freegeoip').count() > free_geo_ip_error_threshold:
+        # disable freegeoip in cache for an hour
+        cb_settings.free_geo_ip_enabled = False
+        cache.set(COUNTRY_BLOCK_SETTINGS_KEY, cb_settings, free_geo_ip_error_sleep)
+        logger.info("FreeGeoIP error threshold of %s has been reached. Service will sleep for %s seconds."
+                    % (free_geo_ip_error_threshold, free_geo_ip_error_sleep))
+
+
 def get_info_from_freegeoip(request, ip, timeout):
 
     url = "http://freegeoip.net/json/%s" % ip
@@ -70,6 +93,9 @@ def get_info_from_freegeoip(request, ip, timeout):
                  'ip': ip,}
 
         log_error(request, message=message, extra=extra)
+
+        manage_freegeoip_error()
+
         return False, False
 
     if response.status_code != requests.codes.ok:

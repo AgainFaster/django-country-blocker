@@ -233,8 +233,10 @@ def create_dictionary(request, user_country, region_code, message=None):
         logger.info("Returning: %s" % ret_dict)
 
     if user_country != NO_COUNTRY and hasattr(request, "session"):
-        request.session['country'] = user_country
-        request.session['region'] = region_code
+        # only write to the session table if there is a change
+        if request.session.get('country') != user_country or request.session.get('region') != region_code:
+            request.session['country'] = user_country
+            request.session['region'] = region_code
 
     return ret_dict
 

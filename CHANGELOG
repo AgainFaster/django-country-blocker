@@ -1,3 +1,6 @@
+v1.1.13
+Performance improvement - only write to session if necessary instead of on every request.
+
 v1.1.12
 Added settings to allow freegeoip to temporarily be disabled after a configured threshold of errors have occurred.
 
